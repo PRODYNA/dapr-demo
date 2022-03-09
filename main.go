@@ -6,6 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+	dapr "github.com/dapr/go-sdk/client"
 )
 
 const (
