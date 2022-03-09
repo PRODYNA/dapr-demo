@@ -15,7 +15,7 @@ const (
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/schedule", ScheduleHandler)
+	r.HandleFunc("/schedule", ScheduleHandler).Methods("POST","OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
 
