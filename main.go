@@ -11,7 +11,10 @@ import (
 )
 
 const (
-	listenAddress = "0.0.0.0:8000"
+	listenAddress = "0.0.0.0:8000" // listen address
+	pubsubName = "broker"
+	topicName  = "demo"
+	data       = "Hello"
 )
 
 func main() {
@@ -33,6 +36,7 @@ func main() {
 	log.Info("Stopping listener")
 }
 
+// Handler for /schedule, sends a message
 func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path ).Info("Schedule triggered")
 	if r.Method == "POST" {
@@ -48,6 +52,7 @@ func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write( []byte( "ok" ) )
 }
 
+// Send a message to pubsub
 func sendMessage() error {
 	client,err := dapr.NewClient()
 	if err != nil {
@@ -56,7 +61,7 @@ func sendMessage() error {
 	}
 	defer client.Close()
 	ctx := context.Background()
-	err = client.PublishEvent(ctx, "broker", "demo", "Hello")
+	err = client.PublishEvent(ctx, pubsubName, topicName, data)
 	if err != nil {
 		log.WithError(err).Error("Unable to send message")
 		return err
