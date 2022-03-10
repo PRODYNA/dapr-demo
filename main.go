@@ -61,7 +61,15 @@ func sendMessage() error {
 	}
 	defer client.Close()
 	ctx := context.Background()
-	err = client.PublishEvent(ctx, pubsubName, topicName, data)
+
+	in := &dapr.InvokeBindingRequest{
+		Name:      "demoqueue",
+		Operation: "create",
+		Data: []byte(data),
+		Metadata: map[string]string{"k1": "v1", "k2": "v2"},
+	}
+
+	_, err = client.InvokeBinding(ctx, in)
 	if err != nil {
 		log.WithError(err).WithFields(
 			log.Fields{
