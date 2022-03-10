@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/gorilla/mux"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
@@ -34,6 +35,29 @@ func main() {
 
 func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path ).Info("Schedule triggered")
+	err := sendMessage()
+	if err != nil {
+		log.WithError(err).Warn("Unable to send message")
+		w.WriteHeader( 500 )
+		w.Write( []byte("error"))
+		return
+	}
 	w.WriteHeader( 200 )
 	w.Write( []byte( "ok" ) )
+}
+
+func sendMessage() error {
+	client,err := dapr.NewClient()
+	if err != nil {
+		log.WithError(err).Error("Unable to create client")
+		return err
+	}
+	defer client.Close()
+	ctx := context.Background()
+	err = client.PublishEvent(ctx, "broker", "demo", "Hello")
+	if err != nil {
+		log.WithError(err).Error("Unable to send message")
+		return err
+	}
+	return nil
 }
