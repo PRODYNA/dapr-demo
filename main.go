@@ -56,14 +56,19 @@ func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 func sendMessage() error {
 	client,err := dapr.NewClient()
 	if err != nil {
-		log.WithError(err).Error("Unable to create client")
+		log.WithError(err).Error("Unable to create DAPR client")
 		return err
 	}
 	defer client.Close()
 	ctx := context.Background()
 	err = client.PublishEvent(ctx, pubsubName, topicName, data)
 	if err != nil {
-		log.WithError(err).Error("Unable to send message")
+		log.WithError(err).WithFields(
+			log.Fields{
+				"pubsubName": pubsubName,
+				"topicName": topicName,
+				"data": data,
+			}).Error("Unable to send message")
 		return err
 	}
 	return nil
