@@ -12,8 +12,8 @@ import (
 
 const (
 	listenAddress = "0.0.0.0:8000" // listen address
-	pubsubName = "broker"
-	topicName  = "demo"
+	pubsubName = "demoqueue"
+	topicName  = "demoqueue"
 	data       = "Hello"
 )
 
