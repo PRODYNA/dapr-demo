@@ -34,8 +34,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@master
         with:
-          context: "{{defaultContext}}:servicea"
+          context: ./servicea
           push: true
           tags: |
             ${{ secrets.REGISTRY_HOST }}/dkrizic/servicea:latest
-          token: ${{ github.token }}
