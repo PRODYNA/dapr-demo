@@ -5,11 +5,18 @@ on:
     branches:
       - main
 #    paths:
-#      - 'servicec/**'
+#      - 'servicea/**'
 
 jobs:
 
-  ci-servicec:
+  ci-servicea:
+
+    strategy:
+      matrix:
+        service:
+          - servicea
+          - serviceb
+          - servicec
 
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +42,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@master
         with:
-          context: ./servicec
+          context: ./${{ matrix.service
           push: true
           tags: |
             ${{ secrets.REGISTRY_HOST }}/dkrizic/servicea:latest
