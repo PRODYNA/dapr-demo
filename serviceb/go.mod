@@ -1,6 +1,6 @@
 module github.com/dkrizic/demo/serviceb
 
-go 1.17
+go 1.18
 
 require (
 	github.com/dapr/go-sdk v1.4.0
