@@ -1,0 +1,4 @@
+image:
+  repository: dkrizic/servicea
+  tag: latest
+  pullPolicy: Always

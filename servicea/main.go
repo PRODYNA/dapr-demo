@@ -21,6 +21,7 @@ func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
 	r.HandleFunc("/schedule", ScheduleHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
 
@@ -48,6 +49,12 @@ func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+	w.WriteHeader(200)
+	w.Write([]byte("ok"))
+}
+
+func HealthHandler(w http.ResponseWriter, r *http.Request) {
+	log.WithField("url", r.URL.Path).Info("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }

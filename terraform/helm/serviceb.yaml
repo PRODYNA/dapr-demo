@@ -1,0 +1,4 @@
+image:
+  repository: dkrizic/serviceb
+  tag: latest
+  pullPolicy: Always
