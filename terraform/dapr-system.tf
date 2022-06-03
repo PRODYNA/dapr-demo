@@ -13,3 +13,32 @@ resource "helm_release" "dapr-system" {
     file("helm/dapr-system.yaml")
   ]
 }
+
+resource "kubernetes_ingress_v1" "dapr-dashboard" {
+  metadata {
+    name = "dapr"
+    namespace = "dapr-system"
+    annotations = {
+      "kubernetes.io/ingress.class" = "nginx"
+    }
+  }
+
+  spec {
+    rule {
+      host = "dapr.minikube"
+      http {
+        path {
+          path = "/"
+          backend {
+            service {
+              name = "dapr-dashboard"
+              port {
+                number = "8080"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
