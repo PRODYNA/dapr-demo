@@ -12,11 +12,6 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -36,7 +31,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v3
         with:
-          context: ./servicea
+          context: "{{defaultContext}}:servicea"
           file: Dockerfile
           push: true
           tags: |
