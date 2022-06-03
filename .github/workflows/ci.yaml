@@ -35,7 +35,6 @@ jobs:
         uses: docker/build-push-action@master
         with:
           context: "{{defaultContext}}:servicea"
-          file: Dockerfile
           push: true
           tags: |
             ${{ secrets.REGISTRY_HOST }}/dkrizic/servicea:latest
