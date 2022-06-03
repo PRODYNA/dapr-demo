@@ -45,4 +45,4 @@ jobs:
           context: ./${{ matrix.service }}
           push: true
           tags: |
-            ${{ secrets.REGISTRY_HOST }}/dkrizic/servicea:latest
+            ${{ secrets.REGISTRY_HOST }}/dkrizic/${{ matrix.service }}:latest
