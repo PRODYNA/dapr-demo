@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  ci-servicea:
+  ci-servicec:
 
     runs-on: ubuntu-latest
     steps:
