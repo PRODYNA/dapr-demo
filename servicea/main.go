@@ -12,6 +12,9 @@ import (
 
 const (
 	listenAddress = "0.0.0.0:8000" // listen address
+	pubsubName    = "default"
+	topicName     = "order"
+	data          = "The order is in"
 )
 
 func main() {
