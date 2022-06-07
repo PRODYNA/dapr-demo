@@ -12,15 +12,12 @@ import (
 
 const (
 	listenAddress = "0.0.0.0:8000" // listen address
-	pubsubName    = "demoqueue"
-	topicName     = "demoqueue"
-	data          = "Hello"
 )
 
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/schedule", ScheduleHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/order", ScheduleHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)

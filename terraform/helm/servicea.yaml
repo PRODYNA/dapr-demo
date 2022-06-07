@@ -6,3 +6,10 @@ podAnnotations:
   dapr.io/enabled: "true"
   dapr.io/app-id: "servicea"
   dapr.io/app-port: "8000"
+ingress:
+  enabled: true
+  hosts:
+    - host: servicea.minikube
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
