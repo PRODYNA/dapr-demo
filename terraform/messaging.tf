@@ -42,7 +42,7 @@ resource "kubernetes_manifest" "redis-pubsub" {
     "kind" = "Component"
     "metadata" = {
       "name" = "redis-pubsub"
-      "namespace" = "messaging"
+      "namespace" = kubernetes_namespace.messaging.id
     }
     "spec" = {
       "type" = "pubsub.redis"
@@ -65,6 +65,28 @@ resource "kubernetes_manifest" "redis-pubsub" {
           "value" = "redis"
         }
       ]
+    }
+  }
+}
+
+# Subscription to checkout topic
+resource "kubernetes_manifest" "checkout-topic" {
+
+  depends_on = [
+    helm_release.dapr-system
+  ]
+
+  manifest = {
+    "apiVersion" = "dapr.io/v1alpha1"
+    "kind" = "Subscription"
+    "metadata" = {
+      "name" = "checkout-topic"
+      "namespace" = kubernetes_namespace.messaging.id
+    }
+    "spec" = {
+      "topic" = "checkout"
+      "route" = "/order"
+      "pubsubname" =  "checkout-topic"
     }
   }
 }
