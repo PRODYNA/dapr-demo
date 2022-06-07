@@ -20,7 +20,7 @@ const (
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/order", ScheduleHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/checkout", ScheduleHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)

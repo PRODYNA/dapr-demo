@@ -4,6 +4,7 @@ resource "kubernetes_namespace" "backend" {
   }
 }
 
+# Deploy the backend services
 resource "helm_release" "service" {
   for_each = {"servicea" = {}, "serviceb" = {}, "servicec" = {}}
   name = each.key
@@ -12,5 +13,5 @@ resource "helm_release" "service" {
   values = [
     file("helm/${each.key}.yaml")
   ]
+  recreate_pods = true
 }
-
