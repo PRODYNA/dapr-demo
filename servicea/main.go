@@ -7,14 +7,18 @@ import (
 	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"time"
 )
 
+var (
+	listenAddress = getenv("LISTEN_ADDRESS", "0.0.0.0:8000")
+	pubsubName    = getenv("PUB_SUB_NAME", "default")
+	topicName     = getenv("TOPIC_NAME", "topic")
+)
+
 const (
-	listenAddress = "0.0.0.0:8000" // listen address
-	pubsubName    = "ecommerce"
-	topicName     = "order"
-	data          = "The order is in"
+	data = "The order is in"
 )
 
 func main() {
@@ -35,6 +39,14 @@ func main() {
 	log.WithField("listenAddress", listenAddress).Info("Starting listener")
 	log.Fatal(srv.ListenAndServe())
 	log.Info("Stopping listener")
+}
+
+func getenv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
 }
 
 // Handler for /schedule, sends a message
@@ -70,7 +82,7 @@ func sendMessage() error {
 	ctx := context.Background()
 
 	in := &dapr.InvokeBindingRequest{
-		Name:      "demoqueue",
+		Name:      topicName,
 		Operation: "create",
 		Data:      []byte(data),
 		Metadata:  map[string]string{"k1": "v1", "k2": "v2"},
