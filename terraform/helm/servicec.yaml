@@ -2,3 +2,7 @@ image:
   repository: dkrizic/servicec
   tag: latest
   pullPolicy: Always
+podAnnotations:
+  dapr.io/enabled: "true"
+  dapr.io/app-id: "servicec"
+  dapr.io/app-port: "8000"

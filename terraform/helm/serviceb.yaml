@@ -2,3 +2,7 @@ image:
   repository: dkrizic/serviceb
   tag: latest
   pullPolicy: Always
+podAnnotations:
+  dapr.io/enabled: "true"
+  dapr.io/app-id: "serviceb"
+  dapr.io/app-port: "8000"

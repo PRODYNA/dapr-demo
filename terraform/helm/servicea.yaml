@@ -2,3 +2,7 @@ image:
   repository: dkrizic/servicea
   tag: latest
   pullPolicy: Always
+podAnnotations:
+  dapr.io/enabled: "true"
+  dapr.io/app-id: "servicea"
+  dapr.io/app-port: "8000"
