@@ -50,8 +50,8 @@ func OrderHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 	}
 
-	log.Info("Order received %s", body)
+	log.Info("Order received %s", string(body))
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("Order received %s", body)))
+	w.Write([]byte(fmt.Sprintf("Order received %s", string(body))))
 }
