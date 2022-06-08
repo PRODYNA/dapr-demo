@@ -6,6 +6,13 @@ podAnnotations:
   dapr.io/enabled: "true"
   dapr.io/app-id: "servicec"
   dapr.io/app-port: "8000"
+ingress:
+  enabled: true
+  hosts:
+    - host: servicec.minikube
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
 env:
   - name: STATE_STORE_NAME
     value: order

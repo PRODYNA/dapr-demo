@@ -25,7 +25,7 @@ func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
-	r.HandleFunc("/number", NumberHandler).Methods("POST", "OPTIONS")
+	r.HandleFunc("/number", NumberHandler).Methods("GET")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
 
@@ -50,10 +50,16 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 // Generates a new number by incrementing value in state
 func NumberHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
-	if r.Method == "GET" {
+	number, err := getNumber()
+	if err != nil {
+		log.Warn("Unable to read the number")
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
 	}
 	w.WriteHeader(200)
-	w.Write([]byte("ok"))
+	numberString := strconv.Itoa(number)
+
+	w.Write([]byte(numberString))
 }
 
 // Get the number from the state, increment it and store it back to the state
