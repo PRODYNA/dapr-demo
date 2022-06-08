@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/mux"
 	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
@@ -41,6 +43,13 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 // Handler for /schedule, sends a message
 func OrderHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).WithField("method", r.Method).Info("Order triggered")
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		log.WithError(err).Error("Unable to read body")
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+	}
+
 	w.WriteHeader(200)
-	w.Write([]byte("order received"))
+	w.Write([]byte(fmt.Sprintf("Order received %s", body)))
 }
