@@ -83,7 +83,7 @@ func getNumber() (number int, err error) {
 		number, err = strconv.Atoi(string(result.Value))
 	}
 	number++
-	log.Infof("New order number %i", number)
+	log.Infof("New order number %d", number)
 
 	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil)
 	if err != nil {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	dapr "github.com/dapr/go-sdk/client"
 	"github.com/gorilla/mux"
 	muxlogrus "github.com/pytimer/mux-logrus"
@@ -59,6 +60,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 // Handler for /checkout, sends a message
 func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
+	number := 0
 	if r.Method == "POST" {
 
 		// get order number
@@ -79,7 +81,7 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	w.WriteHeader(200)
-	w.Write([]byte("ok"))
+	w.Write([]byte(fmt.Sprintf("Order %d", number)))
 }
 
 // Get order number by calling the service
