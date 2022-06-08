@@ -74,7 +74,6 @@ func getNumber() (number int, err error) {
 	defer client.Close()
 
 	ctx := context.Background()
-	defer ctx.Done()
 
 	result, err := client.GetState(ctx, stateStoreName, stateName, nil)
 	if err != nil {
