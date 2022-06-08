@@ -117,5 +117,5 @@ should give you some output like
 Restart all business services pods
 
 ```
-kubectl -n backend get pods | grep -v NAME | awk '{print $1}' | xargs kubectl -n backend delete pod
+kubectl -n backend get deployments | grep -v NAME | awk '{print $1}' | xargs kubectl -n backend rollout restart deployment
 ```
