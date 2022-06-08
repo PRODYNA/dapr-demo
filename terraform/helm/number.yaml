@@ -1,5 +1,5 @@
 image:
-  repository: dkrizic/servicec
+  repository: dkrizic/number
   tag: latest
   pullPolicy: Always
 podAnnotations:
@@ -9,7 +9,7 @@ podAnnotations:
 ingress:
   enabled: true
   hosts:
-    - host: servicec.minikube
+    - host: number.minikube
       paths:
         - path: /
           pathType: ImplementationSpecific

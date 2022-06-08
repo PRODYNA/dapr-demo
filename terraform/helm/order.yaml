@@ -1,0 +1,15 @@
+image:
+  repository: dkrizic/order
+  tag: latest
+  pullPolicy: Always
+podAnnotations:
+  dapr.io/enabled: "true"
+  dapr.io/app-id: "order"
+  dapr.io/app-port: "8000"
+ingress:
+  enabled: true
+  hosts:
+    - host: order.minikube
+      paths:
+        - path: /
+          pathType: ImplementationSpecific

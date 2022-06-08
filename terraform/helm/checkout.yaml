@@ -1,5 +1,5 @@
 image:
-  repository: dkrizic/servicea
+  repository: dkrizic/checkout
   tag: latest
   pullPolicy: Always
 podAnnotations:
@@ -9,7 +9,7 @@ podAnnotations:
 ingress:
   enabled: true
   hosts:
-    - host: servicea.minikube
+    - host: checkout.minikube
       paths:
         - path: /
           pathType: ImplementationSpecific

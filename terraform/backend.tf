@@ -6,7 +6,7 @@ resource "kubernetes_namespace" "backend" {
 
 # Deploy the backend services
 resource "helm_release" "service" {
-  for_each = {"servicea" = {}, "serviceb" = {}, "servicec" = {}}
+  for_each = {"checkout" = {}, "number" = {}, "order" = {}}
   name = each.key
   chart = "../charts/service"
   namespace = "backend"

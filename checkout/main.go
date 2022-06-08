@@ -122,7 +122,7 @@ func sendMessage(number int) error {
 
 	ctx := context.Background()
 	defer ctx.Done()
-	
+
 	data := []byte(strconv.Itoa(number))
 	err = client.PublishEvent(ctx, pubsubName, topicName, data)
 	if err != nil {

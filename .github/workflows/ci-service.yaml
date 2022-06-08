@@ -5,7 +5,7 @@ on:
     branches:
       - main
 #    paths:
-#      - 'servicea/**'
+#      - 'checkout/**'
 
 jobs:
 
@@ -14,9 +14,9 @@ jobs:
     strategy:
       matrix:
         service:
-          - servicea
-          - serviceb
-          - servicec
+          - checkout
+          - order
+          - number
 
     runs-on: ubuntu-latest
     steps:
