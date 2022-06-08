@@ -71,6 +71,8 @@ func getNumber() (number int, err error) {
 		log.Error("Unable to create DAPR client")
 		return 0, err
 	}
+	defer client.Close()
+
 	ctx := context.Background()
 	result, err := client.GetState(ctx, stateStoreName, stateName, nil)
 	if err != nil {
@@ -82,7 +84,7 @@ func getNumber() (number int, err error) {
 	number++
 	log.Infof("New order number %i", number)
 
-	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil)
+	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil, nil)
 	if err != nil {
 		log.WithError(err).Error("Unable to save state")
 		return 0, err
