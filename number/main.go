@@ -71,7 +71,7 @@ func getNumber() (number int, err error) {
 		log.Error("Unable to create DAPR client")
 		return 0, err
 	}
-	defer client.Close()
+	// defer client.Close()
 
 	ctx := context.Background()
 
