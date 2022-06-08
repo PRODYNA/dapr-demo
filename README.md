@@ -37,5 +37,77 @@ terraform apply
 This will install 
 
 * DAPR in the namespace dapr-system
-* Service A, B and C in the namespace Backend
+* The business services
 
+## Number
+
+Number will return an incrementing number
+
+```
+curl http://backend.minikube/number
+```
+
+This call should return an incrementing value
+
+## Checkout
+
+Create a checkout. It does two things
+
+* Call the number service to obtain a number
+* Create a message to the topic checkout
+
+```
+curl -XPOST http://backend.minikube/checkout
+```
+ 
+## Order 
+
+Subscribed to the topic checkout
+
+```
+curl http://backend.minikube/order
+```
+
+## Redis
+
+Redis is used for the persistence
+
+```
+kubectl -n messaging exec -ti redis-master-0 -- redis-cli --pass redis keys \* 
+```
+
+### State
+
+Redis is a state store
+
+```
+kubectl -n messaging exec -ti redis-master-0 -- redis-cli --pass redis hgetall 'number||orderNumber'
+```
+
+should return something like
+
+```
+1) "data"
+2) "5"
+3) "version"
+4) "5"
+```
+
+### Stream
+
+Streams are used for sending asynchrous messages.
+
+```
+kubectl -n messaging exec -ti redis-master-0 -- redis-cli --pass redis xrange checkout - +
+```
+
+should give you some output like
+
+```
+1) 1) "1654699830640-0"
+   2) 1) "data"
+      2) "{\"datacontenttype\":\"text/plain\",\"source\":\"checkout\",\"type\":\"com.dapr.event.sent\",\"tracestate\":\"\",\"traceparent\":\"00-22295cc10dd4eb53ae9879363d0e4943-11aac0459158b429-00\",\"data\":\"1\",\"id\":\"e20734c9-607d-4b11-94fd-bd735c43bea4\",\"specversion\":\"1.0\",\"topic\":\"checkout\",\"pubsubname\":\"pubsub\",\"traceid\":\"00-22295cc10dd4eb53ae9879363d0e4943-11aac0459158b429-00\"}"
+2) 1) "1654699925789-0"
+   2) 1) "data"
+      2) "{\"data\":\"2\",\"source\":\"checkout\",\"pubsubname\":\"pubsub\",\"traceparent\":\"00-7644aab7b8b858c9f99883fe6f6b8b03-07930bba2d1eccc5-00\",\"tracestate\":\"\",\"topic\":\"checkout\",\"traceid\":\"00-7644aab7b8b858c9f99883fe6f6b8b03-07930bba2d1eccc5-00\",\"id\":\"763d3813-887c-4bc1-a50b-94a83f28cfbc\",\"specversion\":\"1.0\",\"datacontenttype\":\"text/plain\",\"type\":\"com.dapr.event.sent\"}"
+```

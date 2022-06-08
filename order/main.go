@@ -15,7 +15,7 @@ const (
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/order", OrderHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/order", OrderHandler).Methods("GET", "POST", "OPTIONS")
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
@@ -40,7 +40,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 
 // Handler for /schedule, sends a message
 func OrderHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Order triggered")
+	log.WithField("url", r.URL.Path).WithField("method", r.Method).Info("Order triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("order received"))
 }

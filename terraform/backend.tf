@@ -147,6 +147,9 @@ resource "kubernetes_manifest" "redis-pubsub-order" {
       "route" = "/checkout"
       "pubsubname" = "pubsub"
     }
+    "scopes" = [
+      "order"
+    ]
   }
 }
 
