@@ -42,7 +42,7 @@ func main() {
 }
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Health triggered")
+	log.WithField("url", r.URL.Path).Trace("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }
@@ -52,7 +52,7 @@ func NumberHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
 	number, err := getNumber()
 	if err != nil {
-		log.Warn("Unable to read the number")
+		log.WithError(err).Error("Unable to read the number")
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
 	}
@@ -74,10 +74,12 @@ func getNumber() (number int, err error) {
 	defer client.Close()
 
 	ctx := context.Background()
+	defer ctx.Done()
+
 	result, err := client.GetState(ctx, stateStoreName, stateName, nil)
 	if err != nil {
 		log.WithError(err).WithField("stateStoreName", stateStoreName).WithField("stateName", stateName).Warn("Unable to read state")
-		number = 1
+		// don't go out here, this might be the first call to the state, so init the number and save a new state
 	} else {
 		number, err = strconv.Atoi(string(result.Value))
 	}
