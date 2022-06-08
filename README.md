@@ -111,3 +111,11 @@ should give you some output like
    2) 1) "data"
       2) "{\"data\":\"2\",\"source\":\"checkout\",\"pubsubname\":\"pubsub\",\"traceparent\":\"00-7644aab7b8b858c9f99883fe6f6b8b03-07930bba2d1eccc5-00\",\"tracestate\":\"\",\"topic\":\"checkout\",\"traceid\":\"00-7644aab7b8b858c9f99883fe6f6b8b03-07930bba2d1eccc5-00\",\"id\":\"763d3813-887c-4bc1-a50b-94a83f28cfbc\",\"specversion\":\"1.0\",\"datacontenttype\":\"text/plain\",\"type\":\"com.dapr.event.sent\"}"
 ```
+
+## Tips
+
+Restart all business services pods
+
+```
+kubectl -n backend get pods | grep -v NAME | awk '{print $1}' | xargs kubectl -n backend delete pod
+```

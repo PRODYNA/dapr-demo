@@ -143,8 +143,8 @@ resource "kubernetes_manifest" "redis-pubsub-order" {
       "namespace" = kubernetes_namespace.backend.id
     }
     "spec" = {
-      "topic" = "order"
-      "route" = "/checkout"
+      "topic" = "checkout"
+      "route" = "/order"
       "pubsubname" = "pubsub"
     }
     "scopes" = [
@@ -153,16 +153,3 @@ resource "kubernetes_manifest" "redis-pubsub-order" {
   }
 }
 
-/*
-apiVersion: dapr.io/v1alpha1
-kind: Subscription
-metadata:
-  name: order-pub-sub
-spec:
-  topic: checkout
-  route: /order
-  pubsubname: order-pub-sub
-scopes:
-- orderprocessing
-- checkout
-*/
