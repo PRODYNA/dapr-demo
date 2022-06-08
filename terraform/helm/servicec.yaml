@@ -15,6 +15,6 @@ ingress:
           pathType: ImplementationSpecific
 env:
   - name: STATE_STORE_NAME
-    value: order
+    value: state
   - name: STATE_NAME
     value: orderNumber
