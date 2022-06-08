@@ -1,3 +1,4 @@
 architecture: standalone
 auth:
+  username: redis
   password: redis

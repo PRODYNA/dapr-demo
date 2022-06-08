@@ -30,46 +30,8 @@ resource "helm_release" "redis" {
   ]
 }
 
-# Component for redis
-resource "kubernetes_manifest" "redis-pubsub" {
-
-  depends_on = [
-    helm_release.dapr-system
-  ]
-
-  manifest = {
-    "apiVersion" = "dapr.io/v1alpha1"
-    "kind" = "Component"
-    "metadata" = {
-      "name" = "redis-pubsub"
-      "namespace" = kubernetes_namespace.messaging.id
-    }
-    "spec" = {
-      "type" = "pubsub.redis"
-      "version" = "v1"
-      "metadata" = [
-        {
-          "name"  = "redisHost"
-          "value" = "redis-master:6379"
-        },
-        {
-          "name" = "consumerID"
-          "value" = "eCommerce"
-        },
-        {
-          "name" = "redisType"
-          "value" = "node"
-        },
-        {
-          "name" = "redisPassword",
-          "value" = "redis"
-        }
-      ]
-    }
-  }
-}
-
 # Subscription to checkout topic
+/*
 resource "kubernetes_manifest" "checkout-topic" {
 
   depends_on = [
@@ -90,3 +52,4 @@ resource "kubernetes_manifest" "checkout-topic" {
     }
   }
 }
+*/
