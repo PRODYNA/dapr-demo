@@ -76,7 +76,7 @@ func getNumber() (number int, err error) {
 	ctx := context.Background()
 	result, err := client.GetState(ctx, stateStoreName, stateName, nil)
 	if err != nil {
-		log.WithError(err).Warn("Unable to read state")
+		log.WithError(err).WithField("stateStoreName", stateStoreName).WithField("stateName", stateName).Warn("Unable to read state")
 		number = 1
 	} else {
 		number, err = strconv.Atoi(string(result.Value))
@@ -86,7 +86,7 @@ func getNumber() (number int, err error) {
 
 	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil)
 	if err != nil {
-		log.WithError(err).Error("Unable to save state")
+		log.WithError(err).WithField("stateStoreName", stateStoreName).WithField("stateName", stateName).Error("Unable to save state")
 		return 0, err
 	}
 

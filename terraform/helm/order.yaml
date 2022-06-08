@@ -1,3 +1,4 @@
+fullnameOverride: order
 image:
   repository: dkrizic/order
   tag: latest

@@ -1,3 +1,4 @@
+fullnameOverride: number
 image:
   repository: dkrizic/number
   tag: latest
