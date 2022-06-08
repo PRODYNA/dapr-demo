@@ -7,6 +7,7 @@ import (
 	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
@@ -16,8 +17,8 @@ const (
 )
 
 var (
-	stateStoreName = "order"
-	stateName      = "orderNumber"
+	stateStoreName = getenv("STATE_STORE_NAME", "order")
+	stateName      = getenv("STATE_NAME", "orderNumber")
 )
 
 func main() {
@@ -82,4 +83,13 @@ func getNumber() (number int, err error) {
 	}
 
 	return number, nil
+}
+
+// Read environment value with default
+func getenv(key, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return fallback
+	}
+	return value
 }

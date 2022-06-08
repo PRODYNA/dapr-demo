@@ -6,3 +6,8 @@ podAnnotations:
   dapr.io/enabled: "true"
   dapr.io/app-id: "servicec"
   dapr.io/app-port: "8000"
+env:
+  - name: STATE_STORE_NAME
+    value: order
+  - name: STATE_NAME
+    value: orderNumber
