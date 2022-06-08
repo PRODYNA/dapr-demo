@@ -7,21 +7,24 @@ import (
 	muxlogrus "github.com/pytimer/mux-logrus"
 	log "github.com/sirupsen/logrus"
 	"net/http"
+	"strconv"
 	"time"
 )
 
 const (
 	listenAddress = "0.0.0.0:8000" // listen address
-	pubsubName    = "demoqueue"
-	topicName     = "demoqueue"
-	data          = "Hello"
+)
+
+var (
+	stateStoreName = "order"
+	stateName      = "orderNumber"
 )
 
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/schedule", ScheduleHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/number", NumberHandler).Methods("POST", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
 
@@ -37,54 +40,46 @@ func main() {
 	log.Info("Stopping listener")
 }
 
-// Handler for /schedule, sends a message
-func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Schedule triggered")
-	if r.Method == "POST" {
-		err := sendMessage()
-		if err != nil {
-			log.WithError(err).Warn("Unable to send message")
-			w.WriteHeader(500)
-			w.Write([]byte("error"))
-			return
-		}
-	}
-	w.WriteHeader(200)
-	w.Write([]byte("ok"))
-}
-
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }
 
-// Send a message to pubsub
-func sendMessage() error {
+// Generates a new number by incrementing value in state
+func NumberHandler(w http.ResponseWriter, r *http.Request) {
+	log.WithField("url", r.URL.Path).Info("Schedule triggered")
+	if r.Method == "GET" {
+	}
+	w.WriteHeader(200)
+	w.Write([]byte("ok"))
+}
+
+// Get the number from the state, increment it and store it back to the state
+// If there is no number in the state, initialize it with 1
+func getNumber() (number int, err error) {
+	number = 0
 	client, err := dapr.NewClient()
 	if err != nil {
-		log.WithError(err).Error("Unable to create DAPR client")
-		return err
+		log.Error("Unable to create DAPR client")
+		return 0, err
 	}
-	defer client.Close()
 	ctx := context.Background()
-
-	in := &dapr.InvokeBindingRequest{
-		Name:      "demoqueue",
-		Operation: "create",
-		Data:      []byte(data),
-		Metadata:  map[string]string{"k1": "v1", "k2": "v2"},
-	}
-
-	_, err = client.InvokeBinding(ctx, in)
+	result, err := client.GetState(ctx, stateStoreName, stateName, nil)
 	if err != nil {
-		log.WithError(err).WithFields(
-			log.Fields{
-				"pubsubName": pubsubName,
-				"topicName":  topicName,
-				"data":       data,
-			}).Error("Unable to send message")
-		return err
+		log.WithError(err).Warn("Unable to read state")
+		number = 1
+	} else {
+		number, err = strconv.Atoi(string(result.Value))
 	}
-	return nil
+	number++
+	log.Infof("New order number %i", number)
+
+	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil)
+	if err != nil {
+		log.WithError(err).Error("Unable to save state")
+		return 0, err
+	}
+
+	return number, nil
 }

@@ -24,8 +24,8 @@ const (
 func main() {
 	log.Info("Starting app")
 	r := mux.NewRouter()
-	r.HandleFunc("/checkout", ScheduleHandler).Methods("POST", "OPTIONS")
 	r.HandleFunc("/health", HealthHandler).Methods("GET", "OPTIONS")
+	r.HandleFunc("/checkout", CheckoutHandler).Methods("POST", "OPTIONS")
 	http.Handle("/", r)
 	r.Use(muxlogrus.NewLogger().Middleware)
 
@@ -49,8 +49,14 @@ func getenv(key, fallback string) string {
 	return value
 }
 
-// Handler for /schedule, sends a message
-func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
+func HealthHandler(w http.ResponseWriter, r *http.Request) {
+	log.WithField("url", r.URL.Path).Info("Health triggered")
+	w.WriteHeader(200)
+	w.Write([]byte("ok"))
+}
+
+// Handler for /checkout, sends a message
+func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
 	if r.Method == "POST" {
 		err := sendMessage()
@@ -61,12 +67,6 @@ func ScheduleHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	w.WriteHeader(200)
-	w.Write([]byte("ok"))
-}
-
-func HealthHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }

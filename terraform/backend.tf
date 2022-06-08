@@ -16,7 +16,7 @@ resource "helm_release" "service" {
   recreate_pods = true
 }
 
-# Component for redis
+# Component pubsub.redis
 resource "kubernetes_manifest" "redis-pubsub" {
 
   depends_on = [
@@ -47,10 +47,6 @@ resource "kubernetes_manifest" "redis-pubsub" {
           "value" = "node"
         },
         {
-          "name" = "redisUsername",
-          "value" = "redis"
-        },
-        {
           "name" = "redisPassword",
           "value" = "redis"
         },
@@ -62,3 +58,72 @@ resource "kubernetes_manifest" "redis-pubsub" {
     }
   }
 }
+
+# Component redis.
+resource "kubernetes_manifest" "redis-state" {
+
+  depends_on = [
+    helm_release.dapr-system
+  ]
+
+  manifest = {
+    "apiVersion" = "dapr.io/v1alpha1"
+    "kind"       = "Component"
+    "metadata"   = {
+      "name"      = "state"
+      "namespace" = kubernetes_namespace.backend.id
+    }
+    "spec" = {
+      "type"     = "state.redis"
+      "version"  = "v1"
+      "metadata" = [
+        {
+          "name"  = "redisHost"
+          "value" = "redis-master.messaging:6379"
+        },
+        {
+          "name"  = "redisPassword"
+          "value" = "redis"
+        },
+        {
+          "name"  = "redisType"
+          "value" = "node"
+        },
+        {
+          "name" = "enableTLS"
+          "value" = "false"
+        }
+      ]
+    }
+  }
+}
+
+/*
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: <NAME>
+  namespace: <NAMESPACE>
+spec:
+  type: state.redis
+  version: v1
+  metadata:
+  - name: redisHost
+    value: <HOST>
+  - name: redisPassword
+    value: <PASSWORD>
+  - name: enableTLS
+    value: <bool> # Optional. Allowed: true, false.
+  - name: failover
+    value: <bool> # Optional. Allowed: true, false.
+  - name: sentinelMasterName
+    value: <string> # Optional
+  - name: maxRetries
+    value: # Optional
+  - name: maxRetryBackoff
+    value: # Optional
+  - name: ttlInSeconds
+    value: <int> # Optional
+  - name: queryIndexes
+    value: <string> # Optional
+*/
