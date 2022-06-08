@@ -68,7 +68,8 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.WithError(err).Error("Unable to get order number")
 			w.WriteHeader(500)
-			w.Write([]byte("error"))
+			w.Write([]byte(err.Error()))
+			return
 		}
 
 		// send message
@@ -76,7 +77,7 @@ func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.WithError(err).Warn("Unable to send message")
 			w.WriteHeader(500)
-			w.Write([]byte("error"))
+			w.Write([]byte(err.Error()))
 			return
 		}
 	}
