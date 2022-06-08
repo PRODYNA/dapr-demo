@@ -156,8 +156,8 @@ kind: Subscription
 metadata:
   name: order-pub-sub
 spec:
-  topic: orders
-  route: /checkout
+  topic: checkout
+  route: /order
   pubsubname: order-pub-sub
 scopes:
 - orderprocessing
