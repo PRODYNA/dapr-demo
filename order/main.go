@@ -36,7 +36,7 @@ func main() {
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Trace("Health triggered")
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 }
 
@@ -46,10 +46,10 @@ func OrderHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.WithError(err).Error("Unable to read body")
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
 
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Order received %s", body)))
 }

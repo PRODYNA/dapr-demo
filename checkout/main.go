@@ -53,35 +53,37 @@ func getenv(key, fallback string) string {
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Trace("Health triggered")
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 }
 
 // Handler for /checkout, sends a message
 func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
-	number := 0
-	if r.Method == "POST" {
-
-		// get order number
-		number, err := getOrderNumber()
-		if err != nil {
-			log.WithError(err).Error("Unable to get order number")
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-			return
-		}
-
-		// send message
-		err = sendMessage(number)
-		if err != nil {
-			log.WithError(err).Warn("Unable to send message")
-			w.WriteHeader(500)
-			w.Write([]byte(err.Error()))
-			return
-		}
+	if r.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
 	}
-	w.WriteHeader(200)
+
+	// get order number
+	number, err := getOrderNumber()
+	if err != nil {
+		log.WithError(err).Error("Unable to get order number")
+		w.WriteHeader(http.StatusFailedDependency)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	// send message
+	err = sendMessage(number)
+	if err != nil {
+		log.WithError(err).Warn("Unable to send message")
+		w.WriteHeader(http.StatusPreconditionFailed)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Order %d", number)))
 }
 

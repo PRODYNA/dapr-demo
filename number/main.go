@@ -53,10 +53,10 @@ func NumberHandler(w http.ResponseWriter, r *http.Request) {
 	number, err := getNumber()
 	if err != nil {
 		log.WithError(err).Error("Unable to read the number")
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
 	}
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 	numberString := strconv.Itoa(number)
 
 	w.Write([]byte(numberString))
