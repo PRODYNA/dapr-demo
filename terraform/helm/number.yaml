@@ -10,9 +10,9 @@ podAnnotations:
 ingress:
   enabled: true
   hosts:
-    - host: number.minikube
+    - host: backend.minikube
       paths:
-        - path: /
+        - path: /number
           pathType: ImplementationSpecific
 env:
   - name: STATE_STORE_NAME

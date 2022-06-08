@@ -42,5 +42,5 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 func OrderHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Order triggered")
 	w.WriteHeader(200)
-	w.Write([]byte("ok"))
+	w.Write([]byte("order received"))
 }

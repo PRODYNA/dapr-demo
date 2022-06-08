@@ -10,7 +10,7 @@ podAnnotations:
 ingress:
   enabled: true
   hosts:
-    - host: order.minikube
+    - host: backend.minikube
       paths:
-        - path: /
+        - path: /order
           pathType: ImplementationSpecific

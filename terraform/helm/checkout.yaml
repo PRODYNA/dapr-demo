@@ -10,9 +10,9 @@ podAnnotations:
 ingress:
   enabled: true
   hosts:
-    - host: checkout.minikube
+    - host: backend.minikube
       paths:
-        - path: /
+        - path: /checkout
           pathType: ImplementationSpecific
 env:
   - name: LISTEN_ADDRESS

@@ -127,3 +127,39 @@ spec:
   - name: queryIndexes
     value: <string> # Optional
 */
+
+# Component redis.
+resource "kubernetes_manifest" "redis-pubsub-order" {
+
+  depends_on = [
+    helm_release.dapr-system
+  ]
+
+  manifest = {
+    "apiVersion" = "dapr.io/v1alpha1"
+    "kind"       = "Subscription"
+    "metadata"   = {
+      "name"      = "order-subscription"
+      "namespace" = kubernetes_namespace.backend.id
+    }
+    "spec" = {
+      "topic" = "order"
+      "route" = "/checkout"
+      "pubsubname" = "pubsub"
+    }
+  }
+}
+
+/*
+apiVersion: dapr.io/v1alpha1
+kind: Subscription
+metadata:
+  name: order-pub-sub
+spec:
+  topic: orders
+  route: /checkout
+  pubsubname: order-pub-sub
+scopes:
+- orderprocessing
+- checkout
+*/
