@@ -4,7 +4,7 @@ image:
   pullPolicy: Always
 podAnnotations:
   dapr.io/enabled: "true"
-  dapr.io/app-id: "servicec"
+  dapr.io/app-id: "number"
   dapr.io/app-port: "8000"
 ingress:
   enabled: true

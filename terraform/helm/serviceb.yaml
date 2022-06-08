@@ -4,5 +4,5 @@ image:
   pullPolicy: Always
 podAnnotations:
   dapr.io/enabled: "true"
-  dapr.io/app-id: "serviceb"
+  dapr.io/app-id: "order"
   dapr.io/app-port: "8000"
