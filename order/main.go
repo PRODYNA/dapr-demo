@@ -33,7 +33,7 @@ func main() {
 }
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Health triggered")
+	log.WithField("url", r.URL.Path).Trace("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }

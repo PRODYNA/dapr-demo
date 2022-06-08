@@ -51,7 +51,7 @@ func getenv(key, fallback string) string {
 }
 
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
-	log.WithField("url", r.URL.Path).Info("Health triggered")
+	log.WithField("url", r.URL.Path).Trace("Health triggered")
 	w.WriteHeader(200)
 	w.Write([]byte("ok"))
 }
@@ -89,7 +89,7 @@ func getOrderNumber() (number int, err error) {
 		log.WithError(err).Error("Unable to create DAPR client")
 		return 0, err
 	}
-	defer client.Close()
+	// defer client.Close()
 
 	ctx := context.Background()
 	defer ctx.Done()
@@ -118,7 +118,7 @@ func sendMessage(number int) error {
 		log.WithError(err).Error("Unable to create DAPR client")
 		return err
 	}
-	defer client.Close()
+	// defer client.Close()
 
 	ctx := context.Background()
 	defer ctx.Done()
