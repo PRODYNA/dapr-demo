@@ -84,7 +84,7 @@ func getNumber() (number int, err error) {
 	number++
 	log.Infof("New order number %i", number)
 
-	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil, nil)
+	err = client.SaveState(ctx, stateStoreName, stateName, []byte(strconv.Itoa(number)), nil)
 	if err != nil {
 		log.WithError(err).Error("Unable to save state")
 		return 0, err
