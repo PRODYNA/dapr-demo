@@ -17,7 +17,7 @@ minikube start
 Once minikube is running enable the ingress controller
 
 ```
-minikube addons enable ingress-controller
+minikube addons enable ingress
 ```
 
 Read out the IP address of minikube with
