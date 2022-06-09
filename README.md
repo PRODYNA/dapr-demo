@@ -1,6 +1,10 @@
 # demo
 DAPR Demo application
 
+![Overview](images/overview.png)
+
+## Installation
+
 Configure and lauch minikube
 
 ```
@@ -45,6 +49,16 @@ This will install
 * DAPR in the namespace dapr-system
 * The business services
 * Monitoring
+
+### DAPR
+
+DAPR should be available under the http://dapr.minikube and show our services
+
+![DAPR Overview](images/dapr-overview.png)
+
+and the following components
+
+![DAPR Components](images/dapr-components.png)
 
 ## Number
 
