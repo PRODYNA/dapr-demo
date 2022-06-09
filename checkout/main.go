@@ -14,13 +14,9 @@ import (
 )
 
 var (
-	listenAddress = getenv("LISTEN_ADDRESS", "0.0.0.0:8000")
-	pubsubName    = getenv("PUB_SUB_NAME", "default")
-	topicName     = getenv("TOPIC_NAME", "topic")
-)
-
-const (
-	data = "The order is in"
+	listenAddress = getenv("LISTEN_ADDRESS", "0.0.0.0:8000") // the port we listen on, with default
+	pubsubName    = getenv("PUB_SUB_NAME", "default")        // the pubsub we are using, with default
+	topicName     = getenv("TOPIC_NAME", "topic")            // the topic we are sending to, with default
 )
 
 func main() {
@@ -51,13 +47,14 @@ func getenv(key, fallback string) string {
 	return value
 }
 
+// Used for Kubernetes probes
 func HealthHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Trace("Health triggered")
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("ok"))
 }
 
-// Handler for /checkout, sends a message
+// Handler for /checkout, get a order number and send a message
 func CheckoutHandler(w http.ResponseWriter, r *http.Request) {
 	log.WithField("url", r.URL.Path).Info("Schedule triggered")
 	if r.Method != "POST" {
@@ -129,15 +126,18 @@ func sendMessage(number int) error {
 	defer ctx.Done()
 
 	data := []byte(strconv.Itoa(number))
+	llog := log.WithFields(
+		log.Fields{
+			"pubsubName": pubsubName,
+			"topicName":  topicName,
+			"data":       data,
+		})
+
 	err = client.PublishEvent(ctx, pubsubName, topicName, data)
 	if err != nil {
-		log.WithError(err).WithFields(
-			log.Fields{
-				"pubsubName": pubsubName,
-				"topicName":  topicName,
-				"data":       data,
-			}).Error("Unable to send message")
+		llog.WithError(err).Error("Unable to send message")
 		return err
 	}
+	llog.Info("Message sent")
 	return nil
 }

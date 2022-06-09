@@ -25,10 +25,16 @@ minikube ip
 and write those entries to your /etc/hosts
 
 ```
-<minikube-ip> dapr.minikube servicea.minikube serviceb.minikube servicec.minikube
+<minikube-ip> dapr.minikube backend.minikube grafana.minikube prometheus.minikube
 ```
 
-In the subdirectory terraform run terraform
+In the subdirectory terraform run terraform apply, but first only for the resources that create CRDs
+
+```
+terraform apply -target=helm_release.kube-prometheus-stack -target=helm_release.dapr-system
+```
+
+Then create everything else
 
 ```
 terraform apply
@@ -38,6 +44,7 @@ This will install
 
 * DAPR in the namespace dapr-system
 * The business services
+* Monitoring
 
 ## Number
 
