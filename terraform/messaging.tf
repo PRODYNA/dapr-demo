@@ -21,9 +21,9 @@ resource "helm_release" "nats" {
 # Install redis
 resource "helm_release" "redis" {
   repository = "https://charts.bitnami.com/bitnami"
-  chart = "redis"
-  namespace = "messaging"
-  name = "redis"
+  chart      = "redis"
+  namespace  = "messaging"
+  name       = "redis"
 
   values = [
     file("helm/redis.yaml")

@@ -1,0 +1,19 @@
+alertmanager:
+  enabled: false
+grafana:
+  ingress:
+    enabled: true
+    hosts:
+      - grafana.minikube
+    path: /
+    pathType: ImplementationSpecific
+prometheus:
+  ingress:
+    enabled: true
+    hosts:
+      - prometheus.minikube
+    path: /
+    pathType: ImplementationSpecific
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false

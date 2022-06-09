@@ -6,9 +6,9 @@ resource "kubernetes_namespace" "backend" {
 
 # Deploy the backend services
 resource "helm_release" "service" {
-  for_each = {"checkout" = {}, "number" = {}, "order" = {}}
-  name = each.key
-  chart = "../charts/service"
+  for_each  = { "checkout" = {}, "number" = {}, "order" = {} }
+  name      = each.key
+  chart     = "../charts/service"
   namespace = "backend"
   values = [
     file("helm/${each.key}.yaml")
@@ -25,13 +25,13 @@ resource "kubernetes_manifest" "redis-pubsub" {
 
   manifest = {
     "apiVersion" = "dapr.io/v1alpha1"
-    "kind" = "Component"
+    "kind"       = "Component"
     "metadata" = {
-      "name" = "pubsub"
+      "name"      = "pubsub"
       "namespace" = kubernetes_namespace.backend.id
     }
     "spec" = {
-      "type" = "pubsub.redis"
+      "type"    = "pubsub.redis"
       "version" = "v1"
       "metadata" = [
         {
@@ -39,7 +39,7 @@ resource "kubernetes_manifest" "redis-pubsub" {
           "value" = "redis-master.messaging:6379"
         },
         {
-          "name" = "consumerID"
+          "name"  = "consumerID"
           "value" = "eCommerce"
         },
         {
@@ -47,11 +47,11 @@ resource "kubernetes_manifest" "redis-pubsub" {
           "value" = "node"
         },
         {
-          "name" = "redisPassword",
+          "name"  = "redisPassword",
           "value" = "redis"
         },
         {
-          "name" = "enableTLS"
+          "name"  = "enableTLS"
           "value" = "false"
         }
       ]
@@ -69,13 +69,13 @@ resource "kubernetes_manifest" "redis-state" {
   manifest = {
     "apiVersion" = "dapr.io/v1alpha1"
     "kind"       = "Component"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "state"
       "namespace" = kubernetes_namespace.backend.id
     }
     "spec" = {
-      "type"     = "state.redis"
-      "version"  = "v1"
+      "type"    = "state.redis"
+      "version" = "v1"
       "metadata" = [
         {
           "name"  = "redisHost"
@@ -90,7 +90,7 @@ resource "kubernetes_manifest" "redis-state" {
           "value" = "node"
         },
         {
-          "name" = "enableTLS"
+          "name"  = "enableTLS"
           "value" = "false"
         }
       ]
@@ -138,13 +138,13 @@ resource "kubernetes_manifest" "redis-pubsub-order" {
   manifest = {
     "apiVersion" = "dapr.io/v1alpha1"
     "kind"       = "Subscription"
-    "metadata"   = {
+    "metadata" = {
       "name"      = "order-subscription"
       "namespace" = kubernetes_namespace.backend.id
     }
     "spec" = {
-      "topic" = "checkout"
-      "route" = "/order"
+      "topic"      = "checkout"
+      "route"      = "/order"
       "pubsubname" = "pubsub"
     }
     "scopes" = [

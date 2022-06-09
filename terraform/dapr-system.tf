@@ -16,7 +16,7 @@ resource "helm_release" "dapr-system" {
 
 resource "kubernetes_ingress_v1" "dapr-dashboard" {
   metadata {
-    name = "dapr"
+    name      = "dapr"
     namespace = "dapr-system"
     annotations = {
       "kubernetes.io/ingress.class" = "nginx"
@@ -42,3 +42,59 @@ resource "kubernetes_ingress_v1" "dapr-dashboard" {
     }
   }
 }
+
+resource "kubernetes_manifest" "podmonitor-dapr-operator" {
+  depends_on = [
+    helm_release.kube-prometheus-stack
+  ]
+
+  for_each  = { "dapr-operator" = {}, "dapr-placement-server" = {}, "dapr-sentry" = {}, "dapr-sidecar-injector" = {} }
+
+
+  manifest = {
+    "apiVersion" = "monitoring.coreos.com/v1"
+    "kind" : "PodMonitor"
+    "metadata" = {
+      "name"      = each.key
+      "namespace" = "dapr-system"
+    }
+    "spec" = {
+      "namespaceSelector" = {
+        "matchNames" = [
+          "dapr-system"
+        ]
+      }
+      "podMetricsEndpoints" = [
+        {
+          "interval" = "15s"
+          "path"     = "/metrics"
+          "port"     = "metrics"
+        }
+      ]
+      "selector" = {
+        "matchLabels" = {
+          "app" = each.key
+        }
+      }
+    }
+  }
+}
+
+/*
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: dapr-operator
+  namespace: dapr-system
+spec:
+  namespaceSelector:
+    matchNames:
+    - dapr-system
+  podMetricsEndpoints:
+  - interval: 15s
+    path: /metrics
+    port: metrics
+  selector:
+    matchLabels:
+      app: dapr-operator
+*/
