@@ -1,6 +1,6 @@
 module github.com/dkrizic/demo/number
 
-go 1.18
+go 1.19
 
 require (
 	github.com/dapr/go-sdk v1.6.0
