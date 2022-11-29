@@ -1,4 +1,4 @@
-module github.com/dkrizic/demo/servicea
+module github.com/dkrizic/demo/checkout
 
 go 1.18
 

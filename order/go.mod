@@ -1,4 +1,4 @@
-module github.com/dkrizic/demo/serviceb
+module github.com/dkrizic/demo/order
 
 go 1.18
 
